@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Kanthal A1/APM",
+    "resistivity": 1.45,
+    "thermalConductivity": 11,
+    "specificHeatCapacity": 0.46
+  },
+  {
+    "name": "Kanthal A/AF/AE",
+    "resistivity": 1.39,
+    "thermalConductivity": 11,
+    "specificHeatCapacity": 0.46
+  },
+  {
+    "name": "Kanthal D",
+    "resistivity": 1.35,
+    "thermalConductivity": 11,
+    "specificHeatCapacity": 0.46
+  },
+  {
+    "name": "Nichrome Ni80Cr20",
+    "resistivity": 1.09,
+    "thermalConductivity": 11.3,
+    "specificHeatCapacity": 0.45
+  },
+  {
+    "name": "Nichrome Ni60Cr15",
+    "resistivity": 0.096,
+    "thermalConductivity": 11.3,
+    "specificHeatCapacity": 0.45
+  },
+  {
+    "name": "Nickel Ni200",
+    "resistivity": 1.12,
+    "thermalConductivity": 70.2,
+    "specificHeatCapacity": 0.456
+  },
+  {
+    "name": "Stainless Steel 316(L)",
+    "resistivity": 0.29,
+    "thermalConductivity": 14.6,
+    "specificHeatCapacity": 0.45
+  }
+]
