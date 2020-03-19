@@ -1,7 +1,7 @@
 import { DynamicIntlProvider } from "src/components/common/DynamicIntlProvider";
 import { DynamicThemeProvider } from "src/components/common/DynamicThemeProvider";
 import { Header } from "src/components/common/Header";
-import CoilPage from "src/components/pages/CoilPage";
+import { CoilPage } from "src/components/pages/CoilPage";
 import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";

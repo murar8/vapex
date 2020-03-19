@@ -7,6 +7,8 @@ export const DynamicIntlProvider: React.FC = props => {
   const locale = useSelector(({ locale }) => locale.currentCode);
   const messages = useSelector(({ locale }) => locale.messages);
 
+  if (!locale) return <></>;
+
   return (
     <IntlProvider locale={locale} messages={messages} defaultLocale={defaultLocale} {...props} />
   );

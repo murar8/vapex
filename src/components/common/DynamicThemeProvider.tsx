@@ -11,7 +11,7 @@ export const DynamicThemeProvider: React.FC = ({ children, ...props }) => {
   const locale = useSelector(({ locale }) => locale.currentCode);
 
   const theme = React.useMemo(
-    () => createMuiTheme({ palette: supportedPalettes[palette] }, localeMap[locale]),
+    () => createMuiTheme({ palette: supportedPalettes[palette] }, localeMap[locale!]),
     [locale, palette]
   );
 

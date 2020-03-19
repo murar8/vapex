@@ -3,25 +3,30 @@ import { mockStore } from "src/util/mockStore";
 import { localeActions as actions, localeActions, localeReducer, LocaleState } from "./locale";
 
 describe("fetchLocale", () => {
-  const store = mockStore();
+  const store = mockStore({ locale: { currentCode: "it" } });
 
   afterEach(() => store.clearActions());
 
-  const run = async () => {
-    await store.dispatch(actions.fetchLocale("en"));
+  const run = async (locale: any) => {
+    await store.dispatch(actions.fetchLocale(locale));
     return store.getActions();
   };
 
   it("Changes the current locale.", async () => {
     fetchMock.mockResponseOnce(JSON.stringify({ msg1: "messaggio1" }));
-    const done = await run();
+    const done = await run("en");
     expect(done).toEqual([actions.setLoading("en"), actions.setLoaded({ msg1: "messaggio1" })]);
   });
 
   it("Sets the error flag when it cannot load a locale.", async () => {
-    fetchMock.mockRejectOnce(new Error("error message."));
-    const done = await run();
-    expect(done).toEqual([actions.setLoading("en"), actions.setError("error message.")]);
+    fetchMock.mockRejectOnce(new Error());
+    const done = await run("en");
+    expect(done).toEqual([actions.setLoading("en"), actions.setError()]);
+  });
+
+  it("Does not do anything if the locale is already set.", async () => {
+    const done = await run("it");
+    expect(done).toEqual([]);
   });
 });
 
@@ -30,14 +35,9 @@ describe("fetchCurrentLocale", () => {
 
   const setup = async (init: any) => {
     const store = mockStore(init);
-    await store.dispatch(actions.fetchCurrentLocale());
+    await store.dispatch(actions.fetchNextLocale());
     return store.getActions();
   };
-
-  it("Fetches the data for the current locale.", async () => {
-    const done = await setup({ locale: { currentCode: "en" } });
-    expect(done).toEqual([actions.setLoading("en"), actions.setLoaded({ msg1: "messaggio1" })]);
-  });
 
   it("Fetches the data for the next locale.", async () => {
     const done = await setup({ locale: { currentCode: "en", nextCode: "it" } });
@@ -66,8 +66,8 @@ describe("setLoaded", () => {
 
 describe("setError", () => {
   it("Sets the error status.", () => {
-    const got = localeReducer(loadingState, localeActions.setError("error message."));
-    expect(got).toMatchObject({ status: "error", error: "error message." });
+    const got = localeReducer(loadingState, localeActions.setError());
+    expect(got).toMatchObject({ status: "error" });
   });
 });
 

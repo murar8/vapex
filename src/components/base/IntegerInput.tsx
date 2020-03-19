@@ -62,10 +62,10 @@ export const IntegerInput = ({
         ...InputProps,
         startAdornment: (
           <InputAdornment position="start">
-            <BaseIconButton label={t(messages.add)} onClick={e => handleChange(e, source - step)}>
+            <BaseIconButton label={t(messages.sub)} onClick={e => handleChange(e, source - step)}>
               <Remove />
             </BaseIconButton>
-            <BaseIconButton label={t(messages.sub)} onClick={e => handleChange(e, source + step)}>
+            <BaseIconButton label={t(messages.add)} onClick={e => handleChange(e, source + step)}>
               <Add />
             </BaseIconButton>
           </InputAdornment>

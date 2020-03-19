@@ -3,19 +3,13 @@ import { defaultLocale, supportedLocales, LocaleCode } from "src/constants";
 import { RootThunkAction } from "../store";
 
 export type LocaleState = {
-  status: "loaded" | "loading" | "error";
-  currentCode: LocaleCode;
+  status: "init" | "loaded" | "loading" | "error";
+  currentCode?: LocaleCode;
   nextCode?: LocaleCode;
   messages?: Record<string, string>;
-  error?: string;
 };
 
-const code = Object.keys(supportedLocales).find(l => navigator.languages.includes(l)) as LocaleCode;
-
-const initialState: LocaleState = {
-  currentCode: code || defaultLocale,
-  status: "loading"
-};
+const initialState: LocaleState = { status: "init" };
 
 export type SetLocaleAction = PayloadAction<Record<string, string>>;
 
@@ -23,21 +17,20 @@ const { actions, reducer } = createSlice({
   name: "locale",
   initialState,
   reducers: {
-    setError: (state, { payload: error }: PayloadAction<string>) => ({
+    setError: state => ({
       ...state,
-      status: "error",
-      error
+      status: "error"
     }),
 
-    clearError: ({ error, nextCode, ...state }) => ({ ...state, status: "loaded" }),
+    clearError: ({ nextCode, ...state }) => ({ ...state, status: "loaded" }),
 
-    setLoading: ({ error, ...state }, { payload: nextCode }: PayloadAction<LocaleCode>) => ({
+    setLoading: ({ ...state }, { payload: nextCode }: PayloadAction<LocaleCode>) => ({
       ...state,
       status: "loading",
       nextCode
     }),
 
-    setLoaded: ({ error, nextCode, ...state }, { payload: messages }: SetLocaleAction) => ({
+    setLoaded: ({ nextCode, ...state }, { payload: messages }: SetLocaleAction) => ({
       ...state,
       status: "loaded",
       currentCode: nextCode!,
@@ -46,19 +39,23 @@ const { actions, reducer } = createSlice({
   }
 });
 
-const fetchLocale = (code: LocaleCode): RootThunkAction => dispatch => {
+const fetchLocale = (code: LocaleCode): RootThunkAction => (dispatch, getState) => {
+  const { locale } = getState();
+
+  if (locale.status !== "init" && code === locale.currentCode) return;
+
   dispatch(actions.setLoading(code));
 
   return fetch(`locales/${code}.json`)
     .then(res => res.json())
     .then(messages => dispatch(actions.setLoaded(messages)))
-    .catch(e => dispatch(actions.setError(e.message)));
+    .catch(() => dispatch(actions.setError()));
 };
 
-const fetchCurrentLocale = (): RootThunkAction => (dispatch, getState) => {
+const fetchNextLocale = (): RootThunkAction => (dispatch, getState) => {
   const { locale } = getState();
-  return dispatch(fetchLocale(locale.nextCode || locale.currentCode));
+  return dispatch(fetchLocale(locale.nextCode!));
 };
 
 export const localeReducer = reducer;
-export const localeActions = { fetchLocale, fetchCurrentLocale, ...actions };
+export const localeActions = { fetchLocale, fetchNextLocale, ...actions };

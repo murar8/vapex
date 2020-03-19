@@ -16,7 +16,7 @@ const messages = defineMessages({
     id: "errorbanner.content",
     defaultMessage: "There was a problem while retrieving your data."
   },
-  error: { id: "errorbanner.error", defaultMessage: "Error: " },
+  check: { id: "errorbanner.check", defaultMessage: "Please check your network connection." },
   retry: { id: "errorbanner.retry", defaultMessage: "Retry" },
   hide: { id: "errorbanner.hide", defaultMessage: "Hide" }
 });
@@ -25,7 +25,6 @@ export const ErrorBanner = () => {
   const t = useFormatMessage();
 
   const show = useSelector(({ locale }) => locale.status === "error");
-  const message = useSelector(({ locale }) => locale.error);
 
   const dispatch = useDispatch();
 
@@ -43,7 +42,7 @@ export const ErrorBanner = () => {
             </Grid>
             <Grid item>
               <Typography>{t(messages.content)}</Typography>
-              <Typography variant="body2">{t(messages.error) + message}</Typography>
+              <Typography variant="body2">{t(messages.check)}</Typography>
             </Grid>
           </Grid>
           <Grid container justify="flex-end" spacing={1}>
@@ -51,7 +50,7 @@ export const ErrorBanner = () => {
               <Button color="primary" onClick={() => dispatch(localeActions.clearError())}>
                 {t(messages.hide)}
               </Button>
-              <Button color="primary" onClick={() => dispatch(localeActions.fetchCurrentLocale())}>
+              <Button color="primary" onClick={() => dispatch(localeActions.fetchNextLocale())}>
                 {t(messages.retry)}
               </Button>
             </Grid>

@@ -8,6 +8,9 @@ import { SelectInput } from "src/components/base/SelectInput";
 import { coilPageActions } from "src/redux/actions";
 import { RootState } from "src/redux/store";
 import { useFormatMessage } from "src/util/hooks";
+import { CoilPageState } from "src/redux/slices/coilPage";
+import defaultMaterials from "src/data/materials.json";
+import { reduxForm, Field } from "redux-form";
 
 const messages = defineMessages({
   title: { id: "coilpage.title", defaultMessage: "Coil Calculator" },
@@ -24,15 +27,42 @@ const messages = defineMessages({
   ribbon: { id: "coilpage.ribbon", defaultMessage: "Ribbon" }
 });
 
-export const CoilPage = (props: ConnectedProps<typeof connector>) => {
+export const initialValues: CoilPageState = {
+  materials: defaultMaterials,
+  material: 0,
+
+  arrangement: undefined,
+  quantity: 1,
+
+  legLength: 3,
+  innerDiameter: 1.25,
+
+  diameter: 0.32,
+
+  parallelQuantity: 1,
+  pitch: 0
+};
+
+const createReduxForm = reduxForm({
+  form: "coilPage",
+  initialValues
+});
+
+export const CoilPage = createReduxForm(() => {
   const t = useFormatMessage();
 
   return (
     <Box p={2}>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Field name="quantity" component={IntegerInput} label={t(messages.quantity)} />
+      </Grid>
+    </Box>
+  );
+});
+
+/* <Grid item xs={12} md={6}>
           <IntegerInput
-            min={-10}
+            min={1}
             label={t(messages.quantity)}
             value={props.quantity}
             onChange={(_, v) => props.setQuantity(v)}
@@ -53,16 +83,10 @@ export const CoilPage = (props: ConnectedProps<typeof connector>) => {
             label={t(messages.material)}
             value={props.material}
             onChange={(_, v) => props.setMaterial(v as number)}>
-            {props.materials.map(({ name }) => (
-              <MenuItem key={name}>{name}</MenuItem>
+            {props.materials.map(({ name }, i) => (
+              <MenuItem key={name} value={i}>
+                {name}
+              </MenuItem>
             ))}
           </SelectInput>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
-
-const connector = connect(({ coilPage }: RootState) => coilPage, coilPageActions);
-
-export default connector(CoilPage);
+        </Grid> */

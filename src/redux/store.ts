@@ -10,13 +10,16 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import { coilPageReducer } from "./slices/coilPage";
 import { paletteReducer } from "./slices/palette";
 import { localeReducer, localeActions } from "./slices/locale";
+import { supportedLocales, defaultLocale, LocaleCode } from "src/constants";
+import { reducer as formReducer } from "redux-form";
 
 export const store = configureStore({
   middleware: getDefaultMiddleware({ serializableCheck: { ignoredActions: [PERSIST] } }),
   reducer: {
-    locale: persistReducer({ storage, key: "locale", whitelist: ["code"] }, localeReducer),
+    locale: persistReducer({ storage, key: "locale", whitelist: ["currentCode"] }, localeReducer),
     palette: persistReducer({ storage, key: "palette" }, paletteReducer),
-    coilPage: coilPageReducer
+    coilPage: coilPageReducer,
+    form: formReducer
   }
 });
 
@@ -24,7 +27,12 @@ export const persistor = persistStore(store);
 
 persistor.subscribe(() => {
   if (persistor.getState().bootstrapped) {
-    store.dispatch(localeActions.fetchCurrentLocale());
+    const current = store.getState().locale.currentCode;
+    const preferred = navigator.languages.find(l => Object.keys(supportedLocales).includes(l));
+
+    store.dispatch(
+      localeActions.fetchLocale(current || (preferred as LocaleCode) || defaultLocale)
+    );
   }
 });
 
