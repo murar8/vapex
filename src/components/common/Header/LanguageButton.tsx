@@ -4,7 +4,7 @@ import React from "react";
 import { defineMessages } from "react-intl";
 import { IconMenu } from "src/components/base/IconMenu";
 import { LocaleCode, supportedLocales } from "src/constants";
-import { localeActions } from "src/redux/slices/locale";
+import { localeActions } from "src/redux/actions";
 import { useDispatch, useSelector } from "src/redux";
 import { useFormatMessage } from "src/util/hooks";
 
@@ -27,7 +27,7 @@ export const LanguageButton = () => {
       icon={status === "loading" ? <CircularProgress size={24} color="inherit" /> : <Translate />}
       items={supportedLocales}
       selected={code}
-      onItemClick={(_, v) => changeLocale(v)}
+      onItemClick={(_, v: any) => changeLocale(v)}
     />
   );
 };

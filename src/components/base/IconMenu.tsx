@@ -2,24 +2,22 @@ import React from "react";
 import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core";
 import { useUniqueID } from "src/util/hooks";
 
-export type Items = Record<string, React.ReactNode>;
-
-export type IconMenuProps<T extends Items> = {
+export type IconMenuProps = {
   icon?: React.ReactNode;
   label?: string;
-  items?: T;
-  selected?: keyof T;
-  onItemClick?: (e: React.MouseEvent, v: keyof T) => void;
+  items?: Record<string, React.ReactNode> | Record<number, React.ReactNode>;
+  selected?: string | number;
+  onItemClick?: (e: React.MouseEvent, v: string | number) => void;
 };
 
-export const IconMenu = <T extends Items>({
+export const IconMenu = ({
   label,
   icon,
   items,
   selected,
   onItemClick,
   ...props
-}: IconMenuProps<T>) => {
+}: IconMenuProps) => {
   const id = useUniqueID("menu");
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -48,7 +46,10 @@ export const IconMenu = <T extends Items>({
       <Menu id={id} anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         {items &&
           Object.entries(items).map(([key, value]) => (
-            <MenuItem key={key} selected={key === selected} onClick={e => handleItemClick(e, key)}>
+            <MenuItem
+              key={key}
+              selected={key === selected?.toString()}
+              onClick={e => handleItemClick(e, key)}>
               {value}
             </MenuItem>
           ))}

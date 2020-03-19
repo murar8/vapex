@@ -1,15 +1,19 @@
 import { createMuiTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import React from "react";
-import { connect, ConnectedProps } from "react-redux";
 import { supportedPalettes } from "src/constants";
-import { RootState } from "src/redux/store";
+import { useSelector } from "src/redux";
+import { itIT, enUS } from "@material-ui/core/locale";
 
-export const DynamicThemeProvider: React.FC<ConnectedProps<typeof connector>> = ({
-  name,
-  children,
-  ...props
-}) => {
-  const theme = React.useMemo(() => createMuiTheme({ palette: supportedPalettes[name] }), [name]);
+const localeMap = { it: itIT, en: enUS };
+
+export const DynamicThemeProvider: React.FC = ({ children, ...props }) => {
+  const palette = useSelector(({ palette }) => palette.name);
+  const locale = useSelector(({ locale }) => locale.currentCode);
+
+  const theme = React.useMemo(
+    () => createMuiTheme({ palette: supportedPalettes[palette] }, localeMap[locale]),
+    [locale, palette]
+  );
 
   return (
     <ThemeProvider theme={theme} {...props}>
@@ -18,7 +22,3 @@ export const DynamicThemeProvider: React.FC<ConnectedProps<typeof connector>> = 
     </ThemeProvider>
   );
 };
-
-const connector = connect(({ palette: { name } }: RootState) => ({ name }), {});
-
-export default connector(DynamicThemeProvider);

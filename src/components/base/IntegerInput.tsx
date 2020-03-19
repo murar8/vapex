@@ -1,10 +1,10 @@
-import { IconButton, InputAdornment, makeStyles } from "@material-ui/core";
+import { InputAdornment, makeStyles } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
 import React from "react";
-import { NumericInput, NumericInputProps } from "./NumericInput";
 import { defineMessages } from "react-intl";
-import { BaseIconButton } from "./BaseIconButton";
 import { useFormatMessage } from "src/util/hooks";
+import { BaseIconButton } from "./BaseIconButton";
+import { NumericInput, NumericInputProps } from "./NumericInput";
 
 const useStyles = makeStyles(() => ({
   input: {

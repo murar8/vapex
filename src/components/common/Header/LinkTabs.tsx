@@ -1,25 +1,28 @@
 import { Tab, Tabs } from "@material-ui/core";
 import React from "react";
-import { Link, matchPath, RouteComponentProps, withRouter } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
+import { useUniqueID } from "src/util/hooks";
 
-export const LinkTabsInternal: React.FC<RouteComponentProps> = ({ staticContext, ...props }) => {
-  const allowed = React.Children.map(props.children, child => (child as any).props.value) || [];
-  const selected = allowed?.find(v => matchPath(props.location.pathname, v));
+export const LinkTabs: React.FC = props => {
+  const location = useLocation();
+
+  const allowed = React.Children.map(props.children, child => (child as any).props.value);
+  const selected = allowed?.find(v => matchPath(location.pathname, v));
 
   return (
     <Tabs
       variant="scrollable"
       scrollButtons="auto"
+      aria-label="navigation tabs"
       value={selected !== undefined && selected}
       {...props}
     />
   );
 };
 
-export const LinkTabs = withRouter(LinkTabsInternal);
+export type LinkTabProps = { value: string; label: string };
 
-export type LinkTabProps = { children?: React.ReactNode; value: string };
-
-export const LinkTab = ({ children, ...props }: LinkTabProps) => (
-  <Tab component={Link} to={props.value} label={children} {...props} />
-);
+export const LinkTab = (props: LinkTabProps) => {
+  const id = useUniqueID("tab");
+  return <Tab component={Link} id={id} to={props.value} {...props} />;
+};

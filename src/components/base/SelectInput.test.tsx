@@ -1,19 +1,19 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { BaseSelect, BaseSelectProps } from "./BaseSelect";
+import { SelectInput, SelectInputProps } from "./SelectInput";
+import { MenuItem } from "@material-ui/core";
 
-const setup = (props?: BaseSelectProps<any>) =>
+const setup = (props?: SelectInputProps) =>
   render(
-    <BaseSelect
-      label="Select"
-      items={{ fst: "first", snd: "second", trd: "third" }}
-      selected="snd"
-      {...props}
-    />
+    <SelectInput label="Select" value="snd" {...props}>
+      <MenuItem value="fst">first</MenuItem>
+      <MenuItem value="snd">second</MenuItem>
+      <MenuItem value="trd">third</MenuItem>
+    </SelectInput>
   );
 
-const setupAndOpen = (props?: BaseSelectProps<any>) => {
+const setupAndOpen = (props?: SelectInputProps) => {
   const result = setup(props);
   const button = result.getByLabelText("Select");
 

@@ -1,10 +1,10 @@
-import { Grid, makeStyles, MenuItem, Box } from "@material-ui/core";
+import { Box, Grid, MenuItem } from "@material-ui/core";
 import React from "react";
 import { defineMessages } from "react-intl";
 import { connect, ConnectedProps } from "react-redux";
-import { BaseRadio } from "src/components/base/BaseRadio";
-import { BaseSelect } from "src/components/base/BaseSelect";
 import { IntegerInput } from "src/components/base/IntegerInput";
+import { RadioElement, RadioSet } from "src/components/base/RadioSet";
+import { SelectInput } from "src/components/base/SelectInput";
 import { coilPageActions } from "src/redux/actions";
 import { RootState } from "src/redux/store";
 import { useFormatMessage } from "src/util/hooks";
@@ -39,19 +39,24 @@ export const CoilPage = (props: ConnectedProps<typeof connector>) => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <BaseRadio
+          <RadioSet
             disabled={!props.arrangement}
             label={t(messages.arrangement)}
             value={props.arrangement || false}
-            onChange={(_, v) => props.setArrangement(v as any)}
-            items={{ parallel: t(messages.parallel), serial: t(messages.serial) }}></BaseRadio>
+            onChange={(_, v) => props.setArrangement(v as any)}>
+            <RadioElement value="parallel" label={t(messages.parallel)} />
+            <RadioElement value="serial" label={t(messages.serial)} />
+          </RadioSet>
         </Grid>
         <Grid item xs={12} md={6}>
-          <BaseSelect
+          <SelectInput
             label={t(messages.material)}
-            selected={props.material}
-            items={props.materials.map(({ name }) => name)}
-            onChange={(_, v) => props.setMaterial(v as number)}></BaseSelect>
+            value={props.material}
+            onChange={(_, v) => props.setMaterial(v as number)}>
+            {props.materials.map(({ name }) => (
+              <MenuItem key={name}>{name}</MenuItem>
+            ))}
+          </SelectInput>
         </Grid>
       </Grid>
     </Box>

@@ -11,7 +11,7 @@ import { defineMessages } from "react-intl";
 import { LinkTab, LinkTabs } from "src/components/common/Header/LinkTabs";
 import { useFormatMessage } from "src/util/hooks";
 import { LanguageButton } from "./LanguageButton";
-import PaletteButton from "./PaletteButton";
+import { PaletteButton } from "./PaletteButton";
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -27,7 +27,7 @@ const messages = defineMessages({
   drain: { id: "header.drain", defaultMessage: "Drain Calculator" }
 });
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const t = useFormatMessage();
   const classes = useStyles();
   const trigger = useScrollTrigger();
@@ -44,14 +44,12 @@ const Header: React.FC = () => {
             <LanguageButton />
           </Toolbar>
           <LinkTabs>
-            <LinkTab value="/coilwrapping"> {t(messages.coil)} </LinkTab>
-            <LinkTab value="/liquidblending"> {t(messages.liquid)} </LinkTab>
-            <LinkTab value="/batterydrain"> {t(messages.drain)} </LinkTab>
+            <LinkTab value="/coilwrapping" label={t(messages.coil)} />
+            <LinkTab value="/liquidblending" label={t(messages.liquid)} />
+            <LinkTab value="/batterydrain" label={t(messages.drain)} />
           </LinkTabs>
         </AppBar>
       </Slide>
     </>
   );
 };
-
-export default Header;

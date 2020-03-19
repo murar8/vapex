@@ -1,11 +1,11 @@
-import { Box, Paper, Grid, Avatar, Typography, Button, Collapse } from "@material-ui/core";
-import React from "react";
+import { Avatar, Box, Button, Collapse, Grid, Paper, Typography } from "@material-ui/core";
 import { NetworkCheck } from "@material-ui/icons";
-import { connect, ConnectedProps } from "react-redux";
-import { RootState } from "src/redux/store";
+import React from "react";
+import { defineMessages } from "react-intl";
+import { useDispatch } from "react-redux";
+import { useSelector } from "src/redux";
 import { localeActions } from "src/redux/actions";
 import { useFormatMessage } from "src/util/hooks";
-import { defineMessages } from "react-intl";
 
 export type BannerProps = {
   icon: React.ReactNode;
@@ -14,21 +14,23 @@ export type BannerProps = {
 const messages = defineMessages({
   content: {
     id: "errorbanner.content",
-    defaultMessage: "There was a problem while retrieving your data"
+    defaultMessage: "There was a problem while retrieving your data."
   },
+  error: { id: "errorbanner.error", defaultMessage: "Error: " },
   retry: { id: "errorbanner.retry", defaultMessage: "Retry" },
   hide: { id: "errorbanner.hide", defaultMessage: "Hide" }
 });
 
-export const ErrorBanner = ({
-  hasError,
-  error,
-  retry,
-  acknowledge
-}: ConnectedProps<typeof connector>) => {
+export const ErrorBanner = () => {
   const t = useFormatMessage();
+
+  const show = useSelector(({ locale }) => locale.status === "error");
+  const message = useSelector(({ locale }) => locale.error);
+
+  const dispatch = useDispatch();
+
   return (
-    <Collapse in={hasError}>
+    <Collapse in={show}>
       <Box clone pt={2} pr={1} pb={1} pl={2}>
         <Paper elevation={0}>
           <Grid container spacing={2} alignItems="center" wrap="nowrap">
@@ -41,14 +43,15 @@ export const ErrorBanner = ({
             </Grid>
             <Grid item>
               <Typography>{t(messages.content)}</Typography>
+              <Typography variant="body2">{t(messages.error) + message}</Typography>
             </Grid>
           </Grid>
           <Grid container justify="flex-end" spacing={1}>
             <Grid item>
-              <Button color="primary" onClick={() => acknowledge()}>
+              <Button color="primary" onClick={() => dispatch(localeActions.clearError())}>
                 {t(messages.hide)}
               </Button>
-              <Button color="primary" onClick={() => retry()}>
+              <Button color="primary" onClick={() => dispatch(localeActions.fetchCurrentLocale())}>
                 {t(messages.retry)}
               </Button>
             </Grid>
@@ -58,13 +61,3 @@ export const ErrorBanner = ({
     </Collapse>
   );
 };
-
-const connector = connect(
-  ({ locale: { error, status } }: RootState) => ({ error, hasError: status === "error" }),
-  {
-    retry: localeActions.fetchCurrentLocale,
-    acknowledge: localeActions.clearError
-  }
-);
-
-export default connector(ErrorBanner);

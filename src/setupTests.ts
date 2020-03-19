@@ -1,8 +1,20 @@
 import "@testing-library/jest-dom/extend-expect";
-import { MessageDescriptor } from "react-intl";
+import { enableFetchMocks } from "jest-fetch-mock";
+
+enableFetchMocks();
+
+declare global {
+  namespace NodeJS {
+    interface Global {
+      document: Document;
+      window: Window;
+      navigator: Navigator;
+    }
+  }
+}
 
 // Polyfill for Popper.js
-(global as any).document.createRange = () => ({
+global.document.createRange = (): any => ({
   setStart: () => {},
   setEnd: () => {},
   commonAncestorContainer: {
@@ -11,7 +23,7 @@ import { MessageDescriptor } from "react-intl";
   }
 });
 
-jest.mock("src/util/hooks", () => ({
-  ...jest.requireActual("src/util/hooks"),
-  useFormatMessage: () => (m: MessageDescriptor) => m.defaultMessage || m.id
+jest.mock("react-intl", () => ({
+  ...jest.requireActual("react-intl"),
+  useIntl: () => ({ formatMessage: (m: any) => m.defaultMessage || m.id })
 }));

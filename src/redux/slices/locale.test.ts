@@ -1,48 +1,47 @@
-import { localeActions as actions, localeReducer, localeActions, LocaleState } from "./locale";
-import { defaultLocale, LocaleCode } from "src/constants";
+import { defaultLocale } from "src/constants";
+import { mockStore } from "src/util/mockStore";
+import { localeActions as actions, localeActions, localeReducer, LocaleState } from "./locale";
 
 describe("fetchLocale", () => {
-  const setup = async (code: LocaleCode) => {
-    const dispatch = jest.fn();
-    await actions.fetchLocale(code)(dispatch, jest.fn(), null);
-    return dispatch;
+  const store = mockStore();
+
+  afterEach(() => store.clearActions());
+
+  const run = async () => {
+    await store.dispatch(actions.fetchLocale("en"));
+    return store.getActions();
   };
 
   it("Changes the current locale.", async () => {
-    window.fetch = jest.fn(() => Promise.resolve({ json: () => ({ msg1: "messaggio1" }) } as any));
-    const dispatch = await setup("it");
-    expect(dispatch).toHaveBeenCalledTimes(2);
-    expect(dispatch).toHaveBeenNthCalledWith(1, actions.setLoading("it"));
-    expect(dispatch).toHaveBeenNthCalledWith(2, actions.setLoaded({ msg1: "messaggio1" }));
+    fetchMock.mockResponseOnce(JSON.stringify({ msg1: "messaggio1" }));
+    const done = await run();
+    expect(done).toEqual([actions.setLoading("en"), actions.setLoaded({ msg1: "messaggio1" })]);
   });
 
   it("Sets the error flag when it cannot load a locale.", async () => {
-    window.fetch = jest.fn(() => Promise.reject({ message: "error message." }));
-    const dispatch = await setup("it");
-    expect(dispatch).toHaveBeenCalledTimes(2);
-    expect(dispatch).toHaveBeenNthCalledWith(2, actions.setError("error message."));
+    fetchMock.mockRejectOnce(new Error("error message."));
+    const done = await run();
+    expect(done).toEqual([actions.setLoading("en"), actions.setError("error message.")]);
   });
 });
 
 describe("fetchCurrentLocale", () => {
-  const setup = async (getState: any) => {
-    const dispatch = jest.fn(v => {
-      if (typeof v === "function") v(dispatch);
-    });
+  fetchMock.mockResponse(JSON.stringify({ msg1: "messaggio1" }));
 
-    await actions.fetchCurrentLocale()(dispatch, getState, null);
-
-    return dispatch;
+  const setup = async (init: any) => {
+    const store = mockStore(init);
+    await store.dispatch(actions.fetchCurrentLocale());
+    return store.getActions();
   };
 
-  it("Fetches the data for the next locale.", async () => {
-    const dispatch = await setup(() => ({ locale: { currentCode: "en", nextCode: "it" } }));
-    expect(dispatch).toBeCalledWith(actions.setLoading("it"));
+  it("Fetches the data for the current locale.", async () => {
+    const done = await setup({ locale: { currentCode: "en" } });
+    expect(done).toEqual([actions.setLoading("en"), actions.setLoaded({ msg1: "messaggio1" })]);
   });
 
-  it("Fetches the data for the current locale.", async () => {
-    const dispatch = await setup(() => ({ locale: { currentCode: "en" } }));
-    expect(dispatch).toBeCalledWith(actions.setLoading("en"));
+  it("Fetches the data for the next locale.", async () => {
+    const done = await setup({ locale: { currentCode: "en", nextCode: "it" } });
+    expect(done).toEqual([actions.setLoading("it"), actions.setLoaded({ msg1: "messaggio1" })]);
   });
 });
 

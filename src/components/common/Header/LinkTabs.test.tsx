@@ -1,34 +1,31 @@
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { LinkTabsInternal, LinkTab } from "./LinkTabs";
-import { Route } from "react-router-dom";
-import { renderWithRouter } from "src/util/testUtil";
+import { renderWithRouter } from "src/util/render";
+import { LinkTab, LinkTabs } from "./LinkTabs";
 
-const setup = (pathname: string) => {
-  const result = renderWithRouter(
-    <LinkTabsInternal location={{ pathname } as any} {...({} as any)}>
-      <LinkTab value="/path0">label0</LinkTab>
-      <LinkTab value="/path1">label1</LinkTab>
-      <LinkTab value="/path2">label2</LinkTab>
-      <Route path="/path1">route1</Route>
-    </LinkTabsInternal>
+const setup = (path = "/") => {
+  const item = (
+    <LinkTabs>
+      <LinkTab value="/path0" label="label0" />
+      <LinkTab value="/path1" label="label1" />
+      <LinkTab value="/path2" label="label2" />
+    </LinkTabs>
   );
 
-  const tab = result.getByText("label1");
-  return { ...result, tab };
+  return renderWithRouter(item, path);
 };
 
 it("Allows for the pathname not to match any child.", () => {
-  expect(() => setup("/path3")).not.toThrow();
+  expect(() => setup()).not.toThrow();
 });
 
 it("Navigates to different tabs.", () => {
-  const { tab, queryByText } = setup("/path0");
-  userEvent.click(tab);
-  expect(queryByText("route1")).toBeVisible();
+  const { getByText, history } = setup();
+  userEvent.click(getByText("label1"));
+  expect(history.location.pathname).toEqual("/path1");
 });
 
 it("Selects tab that matches the current path.", () => {
-  const { tab } = setup("/path1/a/b");
-  expect(tab.parentElement).toHaveClass("Mui-selected");
+  const { getByText } = setup("/path1/a/b");
+  expect(getByText("label1").parentElement).toHaveClass("Mui-selected");
 });

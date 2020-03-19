@@ -1,5 +1,5 @@
 import React from "react";
-import { renderWithIntl } from "src/util/testUtil";
+import { renderWithIntl } from "src/util/render";
 import { CoilPage } from ".";
 
 const actions = [

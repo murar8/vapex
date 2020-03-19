@@ -1,19 +1,17 @@
-import { render, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { useDispatch } from "src/redux";
+import { MockStoreState } from "src/util/mockStore";
+import { renderWithRedux } from "src/util/render";
 import { LanguageButton } from "./LanguageButton";
 
-jest.mock("src/redux", () => {
-  const dispatch = jest.fn();
+jest.mock("src/redux/actions", () => ({
+  localeActions: { fetchLocale: (code: string) => ({ type: "fetchLocale", code }) }
+}));
 
-  return {
-    useSelector: (fn: any) => fn({ locale: { currentCode: "en", status: "loaded" } }),
-    useDispatch: () => dispatch
-  };
-});
-
-const setup = () => render(<LanguageButton />);
+const setup = () => {
+  const initialState: MockStoreState = { locale: { currentCode: "en", status: "loaded" } };
+  return renderWithRedux(<LanguageButton />, initialState);
+};
 
 it("Highlights selected locale.", () => {
   const { getByText } = setup();
@@ -21,11 +19,13 @@ it("Highlights selected locale.", () => {
 });
 
 it("Changes current locale.", () => {
-  const { getByLabelText, getByText } = setup();
+  const { getByLabelText, getByText, store } = setup();
 
   userEvent.click(getByLabelText("Change Language"));
   userEvent.click(getByText("Italiano"));
 
-  expect(useDispatch()).toHaveBeenCalledTimes(1);
-  expect(useDispatch()).toHaveBeenCalledWith(expect.any(Function));
+  const actions = store.getActions();
+
+  expect(actions).toHaveLength(1);
+  expect(actions[0]).toEqual({ code: "it", type: "fetchLocale" });
 });

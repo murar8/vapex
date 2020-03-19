@@ -1,13 +1,15 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { BaseSelect, BaseSelectProps } from "./BaseSelect";
-import { IconMenuProps } from "./IconMenu";
-import { BaseRadio, BaseRadioProps } from "./BaseRadio";
+import { RadioElement, RadioSet, RadioSetProps } from "./RadioSet";
 
-const setup = (props?: BaseRadioProps<any>) =>
+const setup = (props?: RadioSetProps) =>
   render(
-    <BaseRadio label="Select" items={{ fst: "first", snd: "second", trd: "third" }} {...props} />
+    <RadioSet label="Select" {...props}>
+      <RadioElement value="fst" label="first" />
+      <RadioElement value="snd" label="second" />
+      <RadioElement value="trd" label="third" />
+    </RadioSet>
   );
 
 it("Calls onChange when an item is clicked.", () => {
