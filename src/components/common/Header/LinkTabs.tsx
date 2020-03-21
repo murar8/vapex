@@ -23,6 +23,6 @@ export const LinkTabs: React.FC = props => {
 export type LinkTabProps = { value: string; label: string };
 
 export const LinkTab = (props: LinkTabProps) => {
-  const id = useUniqueID("tab");
+  const id = "tab-" + useUniqueID();
   return <Tab component={Link} id={id} to={props.value} {...props} />;
 };

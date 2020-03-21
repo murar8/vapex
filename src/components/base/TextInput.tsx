@@ -18,24 +18,20 @@ const useStyles = makeStyles<Theme, { completed?: boolean }>(({ palette, transit
 
 export type HTMLTextFieldElement = HTMLTextAreaElement | HTMLInputElement;
 
-export type BaseInputProps = {
-  onChange?: (event: React.ChangeEvent<HTMLTextFieldElement>, value: string) => void;
-  completed?: boolean;
-} & Omit<TextFieldProps, "id" | "onChange">;
+export type TextInputProps = { completed?: boolean } & Omit<TextFieldProps, "id">;
 
-export const BaseInput = React.forwardRef<HTMLDivElement, BaseInputProps>(
-  ({ className, completed, onChange, ...props }, ref) => {
+export const TextInput = React.forwardRef<HTMLDivElement, TextInputProps>(
+  ({ className, completed, variant = "outlined", fullWidth = true, ...props }, ref) => {
     const classes = useStyles({ completed });
-    const id = useUniqueID("textfield");
+    const id = "textfield-" + useUniqueID();
 
     return (
       <TextField
         id={id}
         ref={ref}
-        variant="outlined"
-        fullWidth
+        variant={variant}
+        fullWidth={fullWidth}
         className={classes.textField + " " + className}
-        onChange={e => onChange?.(e, e.target.value)}
         {...props}
       />
     );

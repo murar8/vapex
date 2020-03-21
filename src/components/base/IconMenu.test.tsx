@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { IconMenu, IconMenuProps } from "./IconMenu";
 
-const setup = (props?: IconMenuProps<any>) =>
+const setup = (props?: IconMenuProps) =>
   render(
     <IconMenu
       icon={<AcUnit />}
@@ -15,7 +15,7 @@ const setup = (props?: IconMenuProps<any>) =>
     />
   );
 
-const setupAndOpen = (props?: IconMenuProps<any>) => {
+const setupAndOpen = (props?: IconMenuProps) => {
   const result = setup(props);
 
   const button = result.getByLabelText("Menu");

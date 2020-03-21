@@ -18,7 +18,7 @@ export const IconMenu = ({
   onItemClick,
   ...props
 }: IconMenuProps) => {
-  const id = useUniqueID("menu");
+  const id = "menu-" + useUniqueID();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

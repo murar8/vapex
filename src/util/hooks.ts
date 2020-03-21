@@ -3,11 +3,4 @@ import { useIntl } from "react-intl";
 
 export const useFormatMessage = () => useIntl().formatMessage;
 
-export const useUniqueID = (prefix: string, length: number = 4) =>
-  useState(() => {
-    const id = Math.random()
-      .toString()
-      .substring(2, 2 + length);
-
-    return prefix + "-" + id;
-  })[0];
+export const useUniqueID = () => useState(() => Math.floor(Math.random() * 10e8))[0];
