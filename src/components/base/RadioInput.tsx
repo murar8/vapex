@@ -24,7 +24,7 @@ export const RadioInput = ({
   error,
   helperText,
   fullWidth = true,
-  row = false,
+  row = true,
   ...props
 }: RadioInputProps) => (
   <FormControl component="fieldset" {...{ disabled, error, fullWidth }}>
@@ -36,6 +36,6 @@ export const RadioInput = ({
 
 export type RadioInputItemProps = PartialBy<FormControlLabelProps, "control">;
 
-export const RadioInputButton = ({ control = <Radio />, ...props }: RadioInputItemProps) => (
+export const RadioInputItem = ({ control = <Radio />, ...props }: RadioInputItemProps) => (
   <FormControlLabel control={control} {...props} />
 );

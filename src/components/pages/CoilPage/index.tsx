@@ -1,13 +1,12 @@
-import { Box, Grid, makeStyles } from "@material-ui/core";
-import { Formik, FormikProps } from "formik";
+import { Formik } from "formik";
 import React from "react";
-import { defineMessages } from "react-intl";
-import { coilPageSchema } from "./schema";
+import { GroupArray } from "src/components/base/Group";
 import { ArrangementForm } from "./ArrangementForm";
-import { TypeForm } from "./TypeForm";
-import { MaterialForm } from "./MaterialForm";
 import { DimensionForm } from "./DimensionForm";
+import { MaterialForm } from "./MaterialForm";
 import { ProfileForm } from "./ProfileForm";
+import { coilPageSchema } from "./schema";
+import { TypeForm } from "./TypeForm";
 
 export const initialState = {
   quantity: "",
@@ -24,19 +23,15 @@ export const initialState = {
   twistPitch: ""
 };
 
-const useStyles = makeStyles(({ spacing }) => ({ root: { padding: spacing(1) } }));
-
 export const CoilPageForm = () => {
-  const { root } = useStyles();
-
   return (
-    <Grid container spacing={0} className={root}>
+    <GroupArray>
       <ArrangementForm />
       <TypeForm />
       <DimensionForm />
       <MaterialForm />
       <ProfileForm />
-    </Grid>
+    </GroupArray>
   );
 };
 

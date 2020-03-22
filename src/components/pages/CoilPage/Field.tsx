@@ -9,7 +9,15 @@ export type FieldProps<T> = { name: string } & T;
 export const NumericField = ({ name, ...props }: FieldProps<NumericInputProps>) => {
   const [field, { touched, error }] = useField(name);
   const message = touched && error;
-  return <NumericInput {...props} {...field} error={Boolean(message)} helperText={message} />;
+  return (
+    <NumericInput
+      {...props}
+      {...field}
+      inputProps={{ min: 0 }}
+      error={Boolean(message)}
+      helperText={message}
+    />
+  );
 };
 
 export const SelectField = ({ name, ...props }: FieldProps<SelectInputProps>) => {

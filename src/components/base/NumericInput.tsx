@@ -6,17 +6,11 @@ import { TextInput, TextInputProps } from "./TextInput";
 const useStyles = makeStyles(() => ({
   input: {
     '& input[type="number"]::-webkit-inner-spin-button,-webkit-outer-spin-button': {
-      WebkitAppearance: "none",
-      MozAppearance: "none",
-      appearance: "none",
-      margin: 0
-    }
+      WebkitAppearance: "none"
+    },
+    '& input[type="number"]': { MozAppearance: "textfield" }
   }
 }));
-
-const InputButton = (props: IconButtonProps) => (
-  <IconButton onMouseDown={e => e.preventDefault()} tabIndex={-1} {...props} />
-);
 
 export type NumericInputProps = Omit<TextInputProps, "type">;
 
@@ -27,21 +21,14 @@ export const NumericInput = React.forwardRef<HTMLDivElement, NumericInputProps>(
 
     const handleClick = (action: "stepUp" | "stepDown") => {
       const element = inputRef.current!;
-      element.focus();
+      // element.focus();
       element[action]();
       element.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
-    const adornment = (
+    const endAdornment = (
       <>
-        <InputAdornment position="end">
-          <InputButton aria-label="add one" onClick={() => handleClick("stepUp")}>
-            <Add />
-          </InputButton>
-          <InputButton aria-label="subtract one" onClick={() => handleClick("stepDown")}>
-            <Remove />
-          </InputButton>
-        </InputAdornment>
+        <Spinner onAdd={() => handleClick("stepUp")} onSub={() => handleClick("stepDown")} />
         {InputProps?.endAdornment}
       </>
     );
@@ -52,9 +39,26 @@ export const NumericInput = React.forwardRef<HTMLDivElement, NumericInputProps>(
         inputRef={inputRef}
         type="number"
         className={classes.input + " " + className}
-        InputProps={{ ...InputProps, endAdornment: adornment }}
+        InputProps={{ ...InputProps, endAdornment }}
         {...props}
       />
     );
   }
+);
+
+type SpinnerProps = { onAdd: React.MouseEventHandler; onSub: React.MouseEventHandler };
+
+const Spinner = ({ onAdd, onSub }: SpinnerProps) => (
+  <InputAdornment position="end">
+    <InputButton aria-label="step up" onClick={onAdd}>
+      <Add />
+    </InputButton>
+    <InputButton aria-label="step down" onClick={onSub}>
+      <Remove />
+    </InputButton>
+  </InputAdornment>
+);
+
+const InputButton = (props: IconButtonProps) => (
+  <IconButton onMouseDown={e => e.preventDefault()} tabIndex={-1} {...props} />
 );

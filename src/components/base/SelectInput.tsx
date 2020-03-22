@@ -9,6 +9,7 @@ export const SelectInput = ({
   variant = "outlined",
   fullWidth = true,
   autoWidth = true,
+  MenuProps,
   ...props
 }: SelectInputProps) => {
   const id = "select-" + useUniqueID();
@@ -23,6 +24,7 @@ export const SelectInput = ({
         label={label}
         fullWidth={fullWidth}
         autoWidth={autoWidth}
+        MenuProps={{ ...MenuProps, keepMounted: true }}
         {...props}
       />
     </FormControl>

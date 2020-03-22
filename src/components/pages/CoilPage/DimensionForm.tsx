@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormatMessage } from "src/util/hooks";
 import { NumericField } from "./Field";
-import { Group, GroupItem } from "./GridItem";
+import { Group, GroupItem } from "../../base/Group";
 import { defineMessages } from "react-intl";
 
 export const messages = defineMessages({

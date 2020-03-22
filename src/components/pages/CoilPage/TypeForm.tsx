@@ -1,10 +1,10 @@
 import { Collapse } from "@material-ui/core";
 import { useFormikContext } from "formik";
 import React from "react";
-import { RadioInputButton } from "src/components/base/RadioInput";
+import { RadioInputItem } from "src/components/base/RadioInput";
 import { useFormatMessage } from "src/util/hooks";
 import { NumericField, RadioField } from "./Field";
-import { Group, GroupItem, CollapsibleGroupItem } from "./GridItem";
+import { Group, GroupItem, CollapsibleGroupItem } from "../../base/Group";
 import { initialState } from "./index";
 import { defineMessages } from "react-intl";
 
@@ -24,9 +24,9 @@ export const TypeForm = () => {
     <Group>
       <GroupItem>
         <RadioField name="type" label={t(messages.type)}>
-          <RadioInputButton value="single" label={t(messages.single)} />
-          <RadioInputButton value="parallel" label={t(messages.parallel)} />
-          <RadioInputButton value="twisted" label={t(messages.twisted)} />
+          <RadioInputItem value="single" label={t(messages.single)} />
+          <RadioInputItem value="parallel" label={t(messages.parallel)} />
+          <RadioInputItem value="twisted" label={t(messages.twisted)} />
         </RadioField>
       </GroupItem>
       <CollapsibleGroupItem in={values.type !== "single"}>
