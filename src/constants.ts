@@ -1,16 +1,18 @@
 import { orange, red } from "@material-ui/core/colors";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
-export const supportedLocales = { en: "English", it: "Italiano" };
+export const locales = { en: "English", it: "Italiano" };
 
-export type LocaleCode = keyof typeof supportedLocales;
+export type LocaleCode = keyof typeof locales;
 
-export const defaultLocale = "en";
+export const defaultLocaleCode: LocaleCode = "en";
 
-export const supportedPalettes: Record<"Ravenbridge" | "Stormy" | "Sunrise", PaletteOptions> = {
+export const palettes: Record<"Ravenbridge" | "Stormy" | "Sunrise", PaletteOptions> = {
   Ravenbridge: { primary: { main: "#673ab7" }, secondary: { main: "#2979ff" } },
   Stormy: { primary: { main: "#03a9f4" }, secondary: { main: "#00e676" }, type: "dark" },
-  Sunrise: { primary: red, secondary: orange }
+  Sunrise: { primary: red, secondary: orange },
 };
 
-export type PaletteName = keyof typeof supportedPalettes;
+export type PaletteName = keyof typeof palettes;
+
+export const defaultPaletteName: PaletteName = "Stormy";

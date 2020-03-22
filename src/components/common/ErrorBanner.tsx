@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "src/redux";
 import { localeActions } from "src/redux/actions";
 import { useFormatMessage } from "src/util/hooks";
+import { useDynamicIntl } from "./DynamicIntlProvider/IntlContext";
 
 export type BannerProps = {
   icon: React.ReactNode;
@@ -14,22 +15,18 @@ export type BannerProps = {
 const messages = defineMessages({
   content: {
     id: "errorbanner.content",
-    defaultMessage: "There was a problem while retrieving your data."
+    defaultMessage: "There was a problem while retrieving your data.",
   },
   check: { id: "errorbanner.check", defaultMessage: "Please check your network connection." },
   retry: { id: "errorbanner.retry", defaultMessage: "Retry" },
-  hide: { id: "errorbanner.hide", defaultMessage: "Hide" }
+  hide: { id: "errorbanner.hide", defaultMessage: "Hide" },
 });
 
 export const ErrorBanner = () => {
-  const t = useFormatMessage();
-
-  const show = useSelector(({ locale }) => locale.status === "error");
-
-  const dispatch = useDispatch();
+  const { t, clearError, status } = useDynamicIntl();
 
   return (
-    <Collapse in={show}>
+    <Collapse in={status === "error"}>
       <Box clone pt={2} pr={1} pb={1} pl={2}>
         <Paper elevation={0}>
           <Grid container spacing={2} alignItems="center" wrap="nowrap">
@@ -47,11 +44,8 @@ export const ErrorBanner = () => {
           </Grid>
           <Grid container justify="flex-end" spacing={1}>
             <Grid item>
-              <Button color="primary" onClick={() => dispatch(localeActions.clearError())}>
+              <Button color="primary" onClick={() => clearError()}>
                 {t(messages.hide)}
-              </Button>
-              <Button color="primary" onClick={() => dispatch(localeActions.fetchNextLocale())}>
-                {t(messages.retry)}
               </Button>
             </Grid>
           </Grid>

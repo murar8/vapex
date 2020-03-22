@@ -15,12 +15,20 @@
       "name": "Debug CRA Tests",
       "type": "node",
       "request": "launch",
+      "env": { "NODE_ICU_DATA": "node_modules/full-icu", "CI": "true" },
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": ["test", "--runInBand", "--no-cache", "--env=jsdom"],
+      "args": [
+        "test",
+        "--runInBand",
+        "--no-cache",
+        "--env=jest-environment-jsdom-sixteen",
+        "${file}"
+      ],
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
     }
   ]
 }
